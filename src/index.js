@@ -1,4 +1,5 @@
 function debounce (fn, delay) {
+  delay = delay || 0
   let timer = null
   return function () {
     let context = this
@@ -21,30 +22,40 @@ export default {
       required: true
     },
     cache: {
-      type: Number
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       paddingTop: 0,
       start: 0,
-      end: this.count
+      end: 0,
+      range: this.count + (this.cache || 0)
     }
   },
   methods: {
     bindListener () {
       let con = document.querySelectorAll('.container')[0]
-      con.addEventListener('scroll', debounce(this.handleScroll, 500), false)
+      con.addEventListener('scroll', debounce(this.handleScroll), false)
     },
     handleScroll (e) {
-      debugger
-      this.paddingTop = e.target.scrollTop
-      this.compute(this.paddingTop)
+      this.compute(e.target.scrollTop)
     },
     compute (top) {
-      this.start = Math.floor(top / this.size)
-      this.end = this.start + this.size
+      let newStart = Math.ceil(top / this.size)
+      if (!this.inCache(newStart)) {
+        this.paddingTop = top
+        this.start = newStart
+        this.end = this.start + this.range
+      }
+    },
+    inCache (newStart) {
+      return newStart > this.start && newStart + this.count < this.end
     }
+  },
+  created () {
+    this.end = this.start + this.range
   },
   mounted () {
     this.bindListener()
