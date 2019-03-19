@@ -11,7 +11,7 @@ function debounce (fn, delay) {
   }
 }
 export default {
-  name: 'VirtualScoller',
+  name: 'virtualScoller',
   props: {
     size: {
       type: Number,
