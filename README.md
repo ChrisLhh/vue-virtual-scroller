@@ -17,7 +17,7 @@
   }
 </style>
 <script>
-import virtualScroller from './components/index.js'
+import virtualScroller from './src/index.js'
 export default {
   name: 'App',
   components: {
